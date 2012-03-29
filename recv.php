@@ -4,6 +4,7 @@
 # Install by putting this file on your web server and give the web server 
 # user write permissions to the directory in which you put this script.
 #
+$KEY = 'secret_access_key_please_change'; # pass key via 'key' query parameter
 $MAXLENGTH = 4096000; # 4 MB
 function rsperr($msg='', $st='400 Bad Request') {
 	header('HTTP/1.1 '.$st);
@@ -12,6 +13,11 @@ function rsperr($msg='', $st='400 Bad Request') {
 function pathfromid($id, $suffix='') {
 	return substr($id,0,2).'/'.substr($id,2).$suffix;
 }
+
+# Check key
+if ($_GET['key'] != $KEY)
+   rsperr('','401 Unauthorized');
+
 # Build path and url
 if (!isset($_GET['name']) || !trim($_GET['name']))
 	$_GET['name'] = strval(time());
